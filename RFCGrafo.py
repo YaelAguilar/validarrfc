@@ -6,7 +6,7 @@ entrada_usuario = input("Ingrese una cadena: ")
 
 def draw_graph(expression, graph_name):
     G = nx.DiGraph()
-    entrada_con_c = 'c' + entrada_usuario[1:]  # Agregar la letra 'c' al inicio, manteniendo el resto de la cadena
+    entrada_con_c = 'c' + entrada_usuario[1:]
     if expression.match(entrada_con_c):
         nodes = set(re.findall('[a-zA-Z]', entrada_con_c))
         G.add_nodes_from(nodes)
@@ -14,23 +14,18 @@ def draw_graph(expression, graph_name):
         for i in range(len(entrada_con_c) - 1):
             G.add_edge(entrada_con_c[i], entrada_con_c[i + 1], label=entrada_con_c[i] + '->' + entrada_con_c[i + 1])
 
-        pos = nx.shell_layout(G)  # Utilizar shell_layout para ordenar los nodos según su conexión
+        pos = nx.shell_layout(G)
         
-        # Dibujar un triángulo en el nodo inicial
         nx.draw_networkx_nodes(G, pos, nodelist=[entrada_con_c[0]], node_shape='^', node_color='yellow', node_size=1000)
         
-        # Dibujar un círculo doble en el nodo final
         nx.draw_networkx_nodes(G, pos, nodelist=[entrada_con_c[-1]], node_shape='o', node_color='yellow', node_size=1000, linewidths=2, edgecolors='black')
         
-        # Dibujar el resto de los nodos
         nx.draw_networkx_nodes(G, pos, nodelist=list(set(G.nodes()) - set([entrada_con_c[0], entrada_con_c[-1]])), node_color='yellow', node_size=1000)
         
-        # Dibujar las aristas con flechas y etiquetas
         nx.draw(G, pos, with_labels=False, font_weight='bold', node_color='yellow', font_color='black', arrows=True, connectionstyle='arc3,rad=0.1', edgecolors='k', node_size=1000)
         edge_labels = nx.get_edge_attributes(G, 'label')
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red')
 
-        # Añadir etiquetas a los nodos
         labels = {node: f'q{i}' for i, node in enumerate(sorted(G.nodes()))}
         nx.draw_networkx_labels(G, pos, labels, font_color='black')
 
